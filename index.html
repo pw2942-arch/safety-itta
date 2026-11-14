@@ -41,10 +41,10 @@ input{width:100%;padding:14px;border:1px solid #d7dfe8;border-radius:9px;font-si
 .status.rejected{background:#fbe8e8;color:#a33c3c}
 .admin-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 footer{text-align:center;color:#8793a3;font-size:12px;padding:25px 10px}
-.link{display:block;margin-top:15px;text-align:center;color:#16877f;font-size:13px;text-decoration:underline;cursor:pointer}
 </style>
 </head>
 <body>
+
 <header>
   <div class="brand">안전<span>잇다</span></div>
   <div class="tagline">사업장의 안전을 잇다</div>
@@ -95,6 +95,7 @@ footer{text-align:center;color:#8793a3;font-size:12px;padding:25px 10px}
         <input id="adminPassword" type="password" autocomplete="current-password" placeholder="관리자 비밀번호">
         <button id="adminLoginButton" class="primary" onclick="adminLogin()">관리자 로그인</button>
       </div>
+
       <div id="adminDashboard" class="hidden">
         <div class="admin-head">
           <h2>가입 신청 관리</h2>
@@ -109,7 +110,6 @@ footer{text-align:center;color:#8793a3;font-size:12px;padding:25px 10px}
     <div id="message" class="message" role="status"></div>
   </section>
 
-  <!-- 비밀번호 재설정 화면 -->
   <section class="panel hidden" id="resetPanel">
     <h2>관리자 비밀번호 재설정</h2>
     <p style="font-size:13px;color:#68788d;line-height:1.6">
@@ -128,7 +128,7 @@ footer{text-align:center;color:#8793a3;font-size:12px;padding:25px 10px}
 
 <script>
 const SUPABASE_URL = "https://cldlrkgbqgyzzwhfazav.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_실제키값";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_gBv48hphgCwUIyFrWwk4g_jX8ah5x1";
 const FUNCTION_URL = SUPABASE_URL + "/functions/v1/business-auth";
 
 let adminToken = null;
@@ -164,7 +164,10 @@ function showResetMessage(message) {
 async function sendRequest(data) {
   const response=await fetch(FUNCTION_URL,{
     method:"POST",
-    headers:{"Content-Type":"application/json","apikey":SUPABASE_PUBLISHABLE_KEY},
+    headers:{
+      "Content-Type":"application/json",
+      "apikey":SUPABASE_PUBLISHABLE_KEY
+    },
     body:JSON.stringify(data)
   });
   const result=await response.json().catch(()=>({}));
@@ -179,9 +182,18 @@ async function signup() {
   const passwordConfirm=document.getElementById("joinPw2").value;
   const button=document.getElementById("joinButton");
 
-  if(!businessName||!registrationCode||!password||!passwordConfirm){showMessage("모든 항목을 입력해 주세요.");return;}
-  if(password.length<10){showMessage("비밀번호는 10자 이상 입력해 주세요.");return;}
-  if(password!==passwordConfirm){showMessage("비밀번호가 서로 일치하지 않습니다.");return;}
+  if(!businessName||!registrationCode||!password||!passwordConfirm){
+    showMessage("모든 항목을 입력해 주세요.");
+    return;
+  }
+  if(password.length<10){
+    showMessage("비밀번호는 10자 이상 입력해 주세요.");
+    return;
+  }
+  if(password!==passwordConfirm){
+    showMessage("비밀번호가 서로 일치하지 않습니다.");
+    return;
+  }
 
   button.disabled=true;
   button.textContent="신청 처리 중...";
@@ -206,14 +218,21 @@ async function login() {
   const password=document.getElementById("loginPw").value;
   const button=document.getElementById("loginButton");
 
-  if(!businessName||!password){showMessage("사업장명과 비밀번호를 입력해 주세요.");return;}
+  if(!businessName||!password){
+    showMessage("사업장명과 비밀번호를 입력해 주세요.");
+    return;
+  }
+
   button.disabled=true;
   button.textContent="로그인 중...";
   showMessage("");
 
   try {
     const result=await sendRequest({action:"login",businessName,password});
-    if(result.status!=="approved"||!result.session){showMessage(result.message||"아직 소방서 승인 전입니다.");return;}
+    if(result.status!=="approved"||!result.session){
+      showMessage(result.message||"아직 소방서 승인 전입니다.");
+      return;
+    }
     sessionStorage.setItem("safetyitta_session",JSON.stringify(result.session));
     sessionStorage.setItem("safetyitta_business",businessName);
     showMessage(result.message||"로그인되었습니다.");
@@ -231,7 +250,11 @@ async function adminLogin() {
   const password=document.getElementById("adminPassword").value;
   const button=document.getElementById("adminLoginButton");
 
-  if(!email||!password){showAdminMessage("이메일과 비밀번호를 입력해 주세요.");return;}
+  if(!email||!password){
+    showAdminMessage("이메일과 비밀번호를 입력해 주세요.");
+    return;
+  }
+
   button.disabled=true;
   button.textContent="확인 중...";
   showAdminMessage("");
@@ -239,16 +262,27 @@ async function adminLogin() {
   try {
     const response=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=password",{
       method:"POST",
-      headers:{"Content-Type":"application/json","apikey":SUPABASE_PUBLISHABLE_KEY},
+      headers:{
+        "Content-Type":"application/json",
+        "apikey":SUPABASE_PUBLISHABLE_KEY
+      },
       body:JSON.stringify({email,password})
     });
+
     const result=await response.json().catch(()=>({}));
-    if(!response.ok||!result.access_token) throw new Error(result.msg||result.message||"관리자 이메일 또는 비밀번호를 확인해 주세요.");
+    if(!response.ok||!result.access_token){
+      throw new Error(result.msg||result.message||"관리자 이메일 또는 비밀번호를 확인해 주세요.");
+    }
 
     adminToken=result.access_token;
+
     const check=await fetch(SUPABASE_URL+"/rest/v1/business_applications?select=id&limit=1",{
-      headers:{"apikey":SUPABASE_PUBLISHABLE_KEY,"Authorization":"Bearer "+adminToken}
+      headers:{
+        "apikey":SUPABASE_PUBLISHABLE_KEY,
+        "Authorization":"Bearer "+adminToken
+      }
     });
+
     if(!check.ok){
       adminToken=null;
       throw new Error("관리자 권한이 확인되지 않습니다. 관리자 계정 등록 여부를 확인해 주세요.");
@@ -258,6 +292,7 @@ async function adminLogin() {
     document.getElementById("adminDashboard").classList.remove("hidden");
     showAdminMessage("관리자 로그인에 성공했습니다.");
     await loadApplications();
+
   } catch(error) {
     showAdminMessage(error.message);
   } finally {
@@ -269,28 +304,41 @@ async function adminLogin() {
 /* 가입 신청 목록 */
 async function loadApplications() {
   if(!adminToken)return;
+
   const list=document.getElementById("applicationList");
   list.textContent="신청 목록을 불러오는 중입니다...";
 
   try {
     const response=await fetch(SUPABASE_URL+"/rest/v1/business_applications?select=id,business_name,status,created_at,rejection_reason,login_email&order=created_at.desc",{
-      headers:{"apikey":SUPABASE_PUBLISHABLE_KEY,"Authorization":"Bearer "+adminToken}
+      headers:{
+        "apikey":SUPABASE_PUBLISHABLE_KEY,
+        "Authorization":"Bearer "+adminToken
+      }
     });
+
     const rows=await response.json().catch(()=>[]);
     if(!response.ok)throw new Error("신청 목록을 불러오지 못했습니다.");
-    if(!rows.length){list.textContent="등록된 가입 신청이 없습니다.";return;}
+    if(!rows.length){
+      list.textContent="등록된 가입 신청이 없습니다.";
+      return;
+    }
 
     list.innerHTML="";
+
     rows.forEach(item=>{
       const card=document.createElement("div");
       card.className="application";
+
       const title=document.createElement("h3");
       title.textContent=item.business_name||"사업장명 미등록";
+
       const status=document.createElement("span");
       status.className="status "+item.status;
       status.textContent=item.status==="pending"?"승인 대기":item.status==="approved"?"승인 완료":"반려";
+
       const date=document.createElement("p");
       date.textContent="신청일: "+new Date(item.created_at).toLocaleString("ko-KR");
+
       card.append(title,status,date);
 
       if(item.login_email){
@@ -298,27 +346,34 @@ async function loadApplications() {
         email.textContent="계정: "+item.login_email;
         card.append(email);
       }
+
       if(item.rejection_reason){
         const reason=document.createElement("p");
         reason.textContent="반려 사유: "+item.rejection_reason;
         card.append(reason);
       }
+
       if(item.status==="pending"){
         const actions=document.createElement("div");
         actions.className="actions";
+
         const approve=document.createElement("button");
         approve.className="approve";
         approve.textContent="승인";
         approve.onclick=()=>reviewApplication(item.id,"approved");
+
         const reject=document.createElement("button");
         reject.className="reject";
         reject.textContent="반려";
         reject.onclick=()=>reviewApplication(item.id,"rejected");
+
         actions.append(approve,reject);
         card.append(actions);
       }
+
       list.append(card);
     });
+
   } catch(error) {
     list.textContent=error.message;
   }
@@ -327,11 +382,17 @@ async function loadApplications() {
 /* 승인 및 반려 */
 async function reviewApplication(id,status) {
   let rejectionReason=null;
+
   if(status==="rejected"){
     rejectionReason=prompt("반려 사유를 입력해 주세요.");
     if(rejectionReason===null)return;
-    if(!rejectionReason.trim()){alert("반려 사유를 입력해 주세요.");return;}
-  } else if(!confirm("이 사업장의 가입 신청을 승인하시겠습니까?"))return;
+    if(!rejectionReason.trim()){
+      alert("반려 사유를 입력해 주세요.");
+      return;
+    }
+  } else if(!confirm("이 사업장의 가입 신청을 승인하시겠습니까?")) {
+    return;
+  }
 
   try {
     const response=await fetch(SUPABASE_URL+"/rest/v1/business_applications?id=eq."+encodeURIComponent(id)+"&status=eq.pending",{
@@ -342,13 +403,24 @@ async function reviewApplication(id,status) {
         "Content-Type":"application/json",
         "Prefer":"return=representation"
       },
-      body:JSON.stringify({status,reviewed_at:new Date().toISOString(),rejection_reason:rejectionReason})
+      body:JSON.stringify({
+        status,
+        reviewed_at:new Date().toISOString(),
+        rejection_reason:rejectionReason
+      })
     });
+
     const result=await response.json().catch(()=>[]);
-    if(!response.ok)throw new Error("처리하지 못했습니다. 관리자 권한과 데이터베이스 정책을 확인해 주세요.");
-    if(!result.length)throw new Error("처리된 신청이 없습니다. 목록을 새로고침해 주세요.");
+    if(!response.ok){
+      throw new Error("처리하지 못했습니다. 관리자 권한과 데이터베이스 정책을 확인해 주세요.");
+    }
+    if(!result.length){
+      throw new Error("처리된 신청이 없습니다. 목록을 새로고침해 주세요.");
+    }
+
     alert(status==="approved"?"승인 처리되었습니다.":"반려 처리되었습니다.");
     await loadApplications();
+
   } catch(error) {
     alert(error.message);
   }
@@ -372,12 +444,19 @@ function checkRecoveryLink() {
   const token=hashParams.get("access_token");
   const type=hashParams.get("type");
   const errorDescription=hashParams.get("error_description")||queryParams.get("error_description");
+  const errorCode=hashParams.get("error_code")||queryParams.get("error_code");
 
-  if(errorDescription){
+  if(errorDescription||errorCode){
     document.getElementById("mainPanel").classList.add("hidden");
     document.getElementById("intro").classList.add("hidden");
     document.getElementById("resetPanel").classList.remove("hidden");
-    showResetMessage("재설정 링크 오류: "+decodeURIComponent(errorDescription.replace(/\+/g," ")));
+
+    showResetMessage(
+      "재설정 링크 오류: "+
+      (errorDescription||"인증 링크를 확인할 수 없습니다.")+
+      (errorCode?" ("+errorCode+")":"")+
+      "\n새로운 비밀번호 재설정 메일을 요청해 주세요."
+    );
     return;
   }
 
@@ -386,31 +465,47 @@ function checkRecoveryLink() {
     document.getElementById("mainPanel").classList.add("hidden");
     document.getElementById("intro").classList.add("hidden");
     document.getElementById("resetPanel").classList.remove("hidden");
-    showResetMessage("새 비밀번호를 입력해 주세요.");
+    showResetMessage("인증이 확인되었습니다. 새 비밀번호를 입력해 주세요.");
     return;
   }
 
-  if(queryParams.get("token_hash")&&queryParams.get("type")==="recovery"){
+  const tokenHash=queryParams.get("token_hash");
+  const queryType=queryParams.get("type");
+
+  if(tokenHash&&queryType==="recovery"){
     document.getElementById("mainPanel").classList.add("hidden");
     document.getElementById("intro").classList.add("hidden");
     document.getElementById("resetPanel").classList.remove("hidden");
-    verifyRecoveryToken(queryParams.get("token_hash"));
+    verifyRecoveryToken(tokenHash);
   }
 }
 
-/* 이메일 링크의 token_hash 방식도 처리 */
+/* 이메일 링크의 token_hash 방식 처리 */
 async function verifyRecoveryToken(tokenHash) {
   showResetMessage("재설정 링크를 확인하고 있습니다...");
+
   try {
     const response=await fetch(SUPABASE_URL+"/auth/v1/verify",{
       method:"POST",
-      headers:{"Content-Type":"application/json","apikey":SUPABASE_PUBLISHABLE_KEY},
-      body:JSON.stringify({token_hash:tokenHash,type:"recovery"})
+      headers:{
+        "Content-Type":"application/json",
+        "apikey":SUPABASE_PUBLISHABLE_KEY
+      },
+      body:JSON.stringify({
+        token_hash:tokenHash,
+        type:"recovery"
+      })
     });
+
     const result=await response.json().catch(()=>({}));
-    if(!response.ok||!result.access_token)throw new Error(result.msg||result.message||"재설정 링크가 유효하지 않거나 만료되었습니다.");
+
+    if(!response.ok||!result.access_token){
+      throw new Error(result.msg||result.message||"재설정 링크가 유효하지 않거나 만료되었습니다.");
+    }
+
     recoveryToken=result.access_token;
-    showResetMessage("확인되었습니다. 새 비밀번호를 입력해 주세요.");
+    showResetMessage("인증이 확인되었습니다. 새 비밀번호를 입력해 주세요.");
+
   } catch(error) {
     showResetMessage(error.message);
   }
@@ -423,13 +518,15 @@ async function changePassword() {
   const button=document.getElementById("resetButton");
 
   if(!recoveryToken){
-    showResetMessage("재설정 인증이 확인되지 않았습니다. 이메일의 재설정 링크를 다시 열어 주세요.");
+    showResetMessage("재설정 인증이 확인되지 않았습니다. 새로운 이메일 링크를 열어 주세요.");
     return;
   }
+
   if(password.length<10){
     showResetMessage("비밀번호는 10자 이상 입력해 주세요.");
     return;
   }
+
   if(password!==confirmPassword){
     showResetMessage("두 비밀번호가 서로 일치하지 않습니다.");
     return;
@@ -449,21 +546,28 @@ async function changePassword() {
       },
       body:JSON.stringify({password})
     });
+
     const result=await response.json().catch(()=>({}));
-    if(!response.ok)throw new Error(result.msg||result.message||"비밀번호 변경에 실패했습니다.");
+
+    if(!response.ok){
+      throw new Error(result.msg||result.message||"비밀번호 변경에 실패했습니다.");
+    }
 
     recoveryToken=null;
     document.getElementById("newPassword").value="";
     document.getElementById("newPasswordConfirm").value="";
+
     showResetMessage("비밀번호가 변경되었습니다. 관리자 로그인 화면으로 이동합니다.");
 
     history.replaceState(null,"",window.location.pathname);
+
     setTimeout(()=>{
       document.getElementById("resetPanel").classList.add("hidden");
       document.getElementById("mainPanel").classList.remove("hidden");
       document.getElementById("intro").classList.remove("hidden");
       showPage("admin");
     },1500);
+
   } catch(error) {
     showResetMessage(error.message);
   } finally {
