@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안전잇다 | 사업장의 안전을 잇다</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans KR", Arial, sans-serif;
+      background: #f3f6fa;
+      color: #17243a;
+    }
+    header {
+      background: #12345a;
+      color: white;
+      padding: 24px 20px 30px;
+    }
+    .brand { font-size: 25px; font-weight: 800; letter-spacing: -1px; }
+    .brand span { color: #70d6c3; }
+    .tagline { margin-top: 8px; font-size: 14px; color: #d5e5f5; }
+    main { max-width: 480px; margin: 25px auto; padding: 0 18px; }
+    .intro { margin: 25px 4px; }
+    .intro h1 { font-size: 24px; line-height: 1.45; margin-bottom: 8px; }
+    .intro p { color: #68788d; font-size: 14px; line-height: 1.6; }
+    .panel {
+      background: white;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 5px 20px rgba(20,45,75,.07);
+    }
+    .tabs { display: flex; gap: 8px; margin-bottom: 22px; }
+    .tabs button {
+      flex: 1; padding: 12px 5px; border: 0; border-radius: 9px;
+      background: #edf1f6; color: #526176; font-weight: 700;
+      cursor: pointer;
+    }
+    .tabs button.active { background: #12345a; color: white; }
+    label { display: block; font-size: 14px; font-weight: 700; margin: 15px 0 7px; }
+    input {
+      width: 100%; padding: 14px; border: 1px solid #d7dfe8;
+      border-radius: 9px; font-size: 15px; outline-color: #258b83;
+    }
+    .primary {
+      width: 100%; margin-top: 22px; padding: 15px;
+      border: 0; border-radius: 9px; background: #16877f;
+      color: white; font-size: 16px; font-weight: 800; cursor: pointer;
+    }
+    .notice {
+      margin-top: 18px; padding: 13px; border-radius: 9px;
+      background: #eef6f7; color: #42616b; font-size: 12px; line-height: 1.6;
+    }
+    .hidden { display: none; }
+    footer { text-align: center; color: #8793a3; font-size: 12px; padding: 25px 10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">안전<span>잇다</span></div>
+    <div class="tagline">사업장의 안전을 잇다</div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h1>우리 사업장의 안전,<br>안전잇다와 함께하세요.</h1>
+      <p>공장·창고 등 사업장의 자율안전관리를 위한<br>소방안전관리 플랫폼입니다.</p>
+    </section>
+
+    <section class="panel">
+      <div class="tabs">
+        <button id="loginTab" class="active" onclick="showPage('login')">사업장 로그인</button>
+        <button id="joinTab" onclick="showPage('join')">이용 신청</button>
+      </div>
+
+      <div id="loginPage">
+        <label for="loginId">사업장명</label>
+        <input id="loginId" placeholder="등록한 사업장명을 입력하세요">
+        <label for="loginPw">비밀번호</label>
+        <input id="loginPw" type="password" placeholder="비밀번호를 입력하세요">
+        <button class="primary" onclick="alert('로그인 기능은 서버 연결 후 이용할 수 있습니다.')">로그인</button>
+        <div class="notice">※ 소방서 승인 후 이용할 수 있습니다.</div>
+      </div>
+
+      <div id="joinPage" class="hidden">
+        <label for="joinName">사업장명</label>
+        <input id="joinName" placeholder="사업장명을 입력하세요">
+        <label for="joinPw">비밀번호 설정</label>
+        <input id="joinPw" type="password" placeholder="비밀번호를 설정하세요">
+        <label for="joinPw2">비밀번호 확인</label>
+        <input id="joinPw2" type="password" placeholder="비밀번호를 다시 입력하세요">
+        <button class="primary" onclick="alert('이용 신청 기능은 서버 연결 후 이용할 수 있습니다.')">이용 신청</button>
+        <div class="notice">※ 신청 후 소방서의 승인 절차를 거쳐 이용할 수 있습니다.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>안전잇다 · 공장·창고 자율안전관리 플랫폼</footer>
+
+  <script>
+    function showPage(page) {
+      document.getElementById('loginPage').classList.toggle('hidden', page !== 'login');
+      document.getElementById('joinPage').classList.toggle('hidden', page !== 'join');
+      document.getElementById('loginTab').classList.toggle('active', page === 'login');
+      document.getElementById('joinTab').classList.toggle('active', page === 'join');
+    }
+  </script>
+</body>
+</html>
