@@ -2,239 +2,424 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>안전잇다 | 사업장의 안전을 잇다</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Noto Sans KR", Arial, sans-serif;
-      background: #f3f6fa;
-      color: #17243a;
-    }
-    header {
-      background: #12345a;
-      color: white;
-      padding: 24px 20px 30px;
-    }
-    .brand { font-size: 25px; font-weight: 800; letter-spacing: -1px; }
-    .brand span { color: #70d6c3; }
-    .tagline { margin-top: 8px; font-size: 14px; color: #d5e5f5; }
-    main { max-width: 480px; margin: 25px auto; padding: 0 18px; }
-    .intro { margin: 25px 4px; }
-    .intro h1 { font-size: 24px; line-height: 1.45; margin-bottom: 8px; }
-    .intro p { color: #68788d; font-size: 14px; line-height: 1.6; }
-    .panel {
-      background: white;
-      border-radius: 16px;
-      padding: 22px;
-      box-shadow: 0 5px 20px rgba(20,45,75,.07);
-    }
-    .tabs { display: flex; gap: 8px; margin-bottom: 22px; }
-    .tabs button {
-      flex: 1; padding: 12px 5px; border: 0; border-radius: 9px;
-      background: #edf1f6; color: #526176; font-weight: 700;
-      cursor: pointer;
-    }
-    .tabs button.active { background: #12345a; color: white; }
-    label { display: block; font-size: 14px; font-weight: 700; margin: 15px 0 7px; }
-    input {
-      width: 100%; padding: 14px; border: 1px solid #d7dfe8;
-      border-radius: 9px; font-size: 15px; outline-color: #258b83;
-    }
-    .primary {
-      width: 100%; margin-top: 22px; padding: 15px;
-      border: 0; border-radius: 9px; background: #16877f;
-      color: white; font-size: 16px; font-weight: 800; cursor: pointer;
-    }
-    .primary:disabled { opacity: .6; cursor: wait; }
-    .notice {
-      margin-top: 18px; padding: 13px; border-radius: 9px;
-      background: #eef6f7; color: #42616b; font-size: 12px; line-height: 1.6;
-    }
-    .message {
-      display: none; margin-top: 15px; padding: 13px;
-      border-radius: 9px; background: #eef6f7;
-      color: #245c55; font-size: 13px; line-height: 1.6;
-      white-space: pre-wrap;
-    }
-    .hidden { display: none; }
-    footer { text-align: center; color: #8793a3; font-size: 12px; padding: 25px 10px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>안전잇다 | 사업장의 안전을 잇다</title>
+<style>
+* { box-sizing:border-box; }
+body { margin:0; font-family:"Noto Sans KR",Arial,sans-serif; background:#f3f6fa; color:#17243a; }
+header { background:#12345a; color:white; padding:24px 20px 30px; }
+.brand { font-size:25px; font-weight:800; letter-spacing:-1px; }
+.brand span { color:#70d6c3; }
+.tagline { margin-top:8px; font-size:14px; color:#d5e5f5; }
+main { max-width:520px; margin:25px auto; padding:0 18px; }
+.intro { margin:25px 4px; }
+.intro h1 { font-size:24px; line-height:1.45; margin-bottom:8px; }
+.intro p { color:#68788d; font-size:14px; line-height:1.6; }
+.panel { background:white; border-radius:16px; padding:22px; box-shadow:0 5px 20px rgba(20,45,75,.07); margin-bottom:18px; }
+.tabs { display:flex; gap:7px; margin-bottom:22px; }
+.tabs button { flex:1; padding:12px 4px; border:0; border-radius:9px; background:#edf1f6; color:#526176; font-weight:700; cursor:pointer; font-size:13px; }
+.tabs button.active { background:#12345a; color:white; }
+label { display:block; font-size:14px; font-weight:700; margin:15px 0 7px; }
+input, textarea { width:100%; padding:14px; border:1px solid #d7dfe8; border-radius:9px; font-size:15px; outline-color:#258b83; }
+.primary { width:100%; margin-top:22px; padding:15px; border:0; border-radius:9px; background:#16877f; color:white; font-size:16px; font-weight:800; cursor:pointer; }
+.primary:disabled, button:disabled { opacity:.6; cursor:wait; }
+.secondary { padding:10px 14px; border:0; border-radius:8px; background:#edf1f6; color:#34445a; font-weight:700; cursor:pointer; }
+.approve { padding:9px 12px; border:0; border-radius:8px; background:#16877f; color:white; font-weight:700; cursor:pointer; }
+.reject { padding:9px 12px; border:0; border-radius:8px; background:#f2e8e8; color:#a33c3c; font-weight:700; cursor:pointer; }
+.notice { margin-top:18px; padding:13px; border-radius:9px; background:#eef6f7; color:#42616b; font-size:12px; line-height:1.6; }
+.message { display:none; margin-top:15px; padding:13px; border-radius:9px; background:#eef6f7; color:#245c55; font-size:13px; line-height:1.6; white-space:pre-wrap; }
+.hidden { display:none !important; }
+.application { border:1px solid #e1e7ee; border-radius:12px; padding:15px; margin:12px 0; }
+.application h3 { margin:0 0 8px; font-size:17px; }
+.application p { margin:5px 0; color:#64748b; font-size:13px; line-height:1.5; }
+.actions { display:flex; gap:8px; margin-top:13px; }
+.status { display:inline-block; padding:4px 8px; border-radius:6px; background:#edf1f6; font-size:12px; font-weight:700; }
+.status.pending { background:#fff4d9; color:#946200; }
+.status.approved { background:#e3f5ee; color:#16734e; }
+.status.rejected { background:#fbe8e8; color:#a33c3c; }
+.admin-head { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+footer { text-align:center; color:#8793a3; font-size:12px; padding:25px 10px; }
+</style>
 </head>
 <body>
-  <header>
-    <div class="brand">안전<span>잇다</span></div>
-    <div class="tagline">사업장의 안전을 잇다</div>
-  </header>
+<header>
+  <div class="brand">안전<span>잇다</span></div>
+  <div class="tagline">사업장의 안전을 잇다</div>
+</header>
 
-  <main>
-    <section class="intro">
-      <h1>우리 사업장의 안전,<br>안전잇다와 함께하세요.</h1>
-      <p>공장·창고 등 사업장의 자율안전관리를 위한<br>소방안전관리 플랫폼입니다.</p>
-    </section>
+<main>
+  <section class="intro" id="intro">
+    <h1>우리 사업장의 안전,<br>안전잇다와 함께하세요.</h1>
+    <p>공장·창고 등 사업장의 자율안전관리를 위한<br>소방안전관리 플랫폼입니다.</p>
+  </section>
 
-    <section class="panel">
-      <div class="tabs">
-        <button id="loginTab" class="active" onclick="showPage('login')">사업장 로그인</button>
-        <button id="joinTab" onclick="showPage('join')">이용 신청</button>
+  <section class="panel" id="mainPanel">
+    <div class="tabs">
+      <button id="loginTab" class="active" onclick="showPage('login')">사업장 로그인</button>
+      <button id="joinTab" onclick="showPage('join')">이용 신청</button>
+      <button id="adminTab" onclick="showPage('admin')">소방서 관리자</button>
+    </div>
+
+    <div id="loginPage">
+      <label for="loginId">사업장명</label>
+      <input id="loginId" autocomplete="organization" placeholder="등록한 사업장명을 입력하세요">
+      <label for="loginPw">비밀번호</label>
+      <input id="loginPw" type="password" autocomplete="current-password" placeholder="비밀번호를 입력하세요">
+      <button id="loginButton" class="primary" onclick="login()">로그인</button>
+      <div class="notice">※ 소방서 승인 후 이용할 수 있습니다.</div>
+    </div>
+
+    <div id="joinPage" class="hidden">
+      <label for="joinName">사업장명</label>
+      <input id="joinName" autocomplete="organization" placeholder="사업장명을 입력하세요">
+      <label for="joinCode">사업장 등록코드</label>
+      <input id="joinCode" autocomplete="off" placeholder="소방서에서 발급한 등록코드">
+      <label for="joinPw">비밀번호 설정</label>
+      <input id="joinPw" type="password" autocomplete="new-password" placeholder="10자 이상 입력하세요">
+      <label for="joinPw2">비밀번호 확인</label>
+      <input id="joinPw2" type="password" autocomplete="new-password" placeholder="비밀번호를 다시 입력하세요">
+      <button id="joinButton" class="primary" onclick="signup()">이용 신청</button>
+      <div class="notice">※ 등록코드는 소방서에서 발급받아야 합니다.<br>※ 신청 후 소방서의 승인 절차를 거쳐 이용할 수 있습니다.</div>
+    </div>
+
+    <div id="adminPage" class="hidden">
+      <h2>소방서 관리자</h2>
+      <div id="adminLoginArea">
+        <p style="font-size:13px;color:#68788d;">관리자 계정으로 로그인해 주세요.</p>
+        <label for="adminEmail">관리자 이메일</label>
+        <input id="adminEmail" type="email" autocomplete="username" placeholder="관리자 이메일">
+        <label for="adminPassword">비밀번호</label>
+        <input id="adminPassword" type="password" autocomplete="current-password" placeholder="관리자 비밀번호">
+        <button id="adminLoginButton" class="primary" onclick="adminLogin()">관리자 로그인</button>
       </div>
 
-      <div id="loginPage">
-        <label for="loginId">사업장명</label>
-        <input id="loginId" autocomplete="organization" placeholder="등록한 사업장명을 입력하세요">
-
-        <label for="loginPw">비밀번호</label>
-        <input id="loginPw" type="password" autocomplete="current-password" placeholder="비밀번호를 입력하세요">
-
-        <button id="loginButton" class="primary" onclick="login()">로그인</button>
-        <div class="notice">※ 소방서 승인 후 이용할 수 있습니다.</div>
+      <div id="adminDashboard" class="hidden">
+        <div class="admin-head">
+          <h2>가입 신청 관리</h2>
+          <button class="secondary" onclick="adminLogout()">로그아웃</button>
+        </div>
+        <button class="secondary" onclick="loadApplications()">목록 새로고침</button>
+        <div id="applicationList" style="margin-top:15px;"></div>
       </div>
+      <div id="adminMessage" class="message"></div>
+    </div>
 
-      <div id="joinPage" class="hidden">
-        <label for="joinName">사업장명</label>
-        <input id="joinName" autocomplete="organization" placeholder="사업장명을 입력하세요">
+    <div id="message" class="message" role="status"></div>
+  </section>
+</main>
 
-        <label for="joinCode">사업장 등록코드</label>
-        <input id="joinCode" autocomplete="off" placeholder="소방서에서 발급한 등록코드">
+<footer>안전잇다 · 공장·창고 자율안전관리 플랫폼</footer>
 
-        <label for="joinPw">비밀번호 설정</label>
-        <input id="joinPw" type="password" autocomplete="new-password" placeholder="10자 이상 입력하세요">
+<script>
+const SUPABASE_URL = "https://cldlrkgbqgyzzwhfazav.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_gBv48hphgCwUIyFrWwk4g_jX8ah5x1";
+const FUNCTION_URL = SUPABASE_URL + "/functions/v1/business-auth";
 
-        <label for="joinPw2">비밀번호 확인</label>
-        <input id="joinPw2" type="password" autocomplete="new-password" placeholder="비밀번호를 다시 입력하세요">
+let adminToken = null;
 
-        <button id="joinButton" class="primary" onclick="signup()">이용 신청</button>
-        <div class="notice">※ 등록코드는 소방서에서 발급받아야 합니다.<br>※ 신청 후 소방서의 승인 절차를 거쳐 이용할 수 있습니다.</div>
-      </div>
+function showPage(page) {
+  ["login","join","admin"].forEach(name => {
+    document.getElementById(name + "Page").classList.toggle("hidden", name !== page);
+    document.getElementById(name + "Tab").classList.toggle("active", name === page);
+  });
+  showMessage("");
+  showAdminMessage("");
+}
 
-      <div id="message" class="message" role="status"></div>
-    </section>
-  </main>
+function showMessage(message) {
+  const box = document.getElementById("message");
+  box.textContent = message;
+  box.style.display = message ? "block" : "none";
+}
 
-  <footer>안전잇다 · 공장·창고 자율안전관리 플랫폼</footer>
+function showAdminMessage(message) {
+  const box = document.getElementById("adminMessage");
+  box.textContent = message;
+  box.style.display = message ? "block" : "none";
+}
 
-  <script>
-    const SUPABASE_URL = "https://cldlrkgbqgyzzwhfazav.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_gBvF48hphgCwUIyFrWwk4g_jX8ah5x1";
-    const FUNCTION_URL = SUPABASE_URL + "/functions/v1/business-auth";
+async function sendRequest(data) {
+  const response = await fetch(FUNCTION_URL, {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "apikey":SUPABASE_PUBLISHABLE_KEY
+    },
+    body:JSON.stringify(data)
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(result.message || "요청 처리 중 오류가 발생했습니다.");
+  return result;
+}
 
-    function showPage(page) {
-      document.getElementById("loginPage").classList.toggle("hidden", page !== "login");
-      document.getElementById("joinPage").classList.toggle("hidden", page !== "join");
-      document.getElementById("loginTab").classList.toggle("active", page === "login");
-      document.getElementById("joinTab").classList.toggle("active", page === "join");
-      showMessage("");
+async function signup() {
+  const businessName = document.getElementById("joinName").value.trim();
+  const registrationCode = document.getElementById("joinCode").value.trim();
+  const password = document.getElementById("joinPw").value;
+  const passwordConfirm = document.getElementById("joinPw2").value;
+  const button = document.getElementById("joinButton");
+
+  if (!businessName || !registrationCode || !password || !passwordConfirm) {
+    showMessage("모든 항목을 입력해 주세요."); return;
+  }
+  if (password.length < 10) {
+    showMessage("비밀번호는 10자 이상 입력해 주세요."); return;
+  }
+  if (password !== passwordConfirm) {
+    showMessage("비밀번호가 서로 일치하지 않습니다."); return;
+  }
+
+  button.disabled = true;
+  button.textContent = "신청 처리 중...";
+  showMessage("");
+
+  try {
+    const result = await sendRequest({action:"signup",businessName,password,registrationCode});
+    showMessage(result.message || "이용 신청이 접수되었습니다. 소방서 승인 후 이용할 수 있습니다.");
+    document.getElementById("joinPw").value = "";
+    document.getElementById("joinPw2").value = "";
+    document.getElementById("joinCode").value = "";
+  } catch(error) {
+    showMessage(error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "이용 신청";
+  }
+}
+
+async function login() {
+  const businessName = document.getElementById("loginId").value.trim();
+  const password = document.getElementById("loginPw").value;
+  const button = document.getElementById("loginButton");
+
+  if (!businessName || !password) {
+    showMessage("사업장명과 비밀번호를 입력해 주세요."); return;
+  }
+
+  button.disabled = true;
+  button.textContent = "로그인 중...";
+  showMessage("");
+
+  try {
+    const result = await sendRequest({action:"login",businessName,password});
+    if (result.status !== "approved" || !result.session) {
+      showMessage(result.message || "아직 소방서 승인 전입니다.");
+      return;
     }
+    sessionStorage.setItem("safetyitta_session",JSON.stringify(result.session));
+    sessionStorage.setItem("safetyitta_business",businessName);
+    showMessage(result.message || "로그인되었습니다.");
+  } catch(error) {
+    showMessage(error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "로그인";
+  }
+}
 
-    function showMessage(message) {
-      const box = document.getElementById("message");
-      box.textContent = message;
-      box.style.display = message ? "block" : "none";
-    }
+/* 소방서 관리자 로그인 */
+async function adminLogin() {
+  const email = document.getElementById("adminEmail").value.trim();
+  const password = document.getElementById("adminPassword").value;
+  const button = document.getElementById("adminLoginButton");
 
-    async function sendRequest(data) {
-      const response = await fetch(FUNCTION_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_PUBLISHABLE_KEY
+  if (!email || !password) {
+    showAdminMessage("이메일과 비밀번호를 입력해 주세요."); return;
+  }
+
+  button.disabled = true;
+  button.textContent = "확인 중...";
+  showAdminMessage("");
+
+  try {
+    const response = await fetch(
+      SUPABASE_URL + "/auth/v1/token?grant_type=password",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "apikey":SUPABASE_PUBLISHABLE_KEY
         },
-        body: JSON.stringify(data)
-      });
-
-      const result = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        throw new Error(result.message || "요청 처리 중 오류가 발생했습니다.");
+        body:JSON.stringify({email,password})
       }
+    );
 
-      return result;
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.access_token) {
+      throw new Error("관리자 이메일 또는 비밀번호를 확인해 주세요.");
     }
 
-    async function signup() {
-      const businessName = document.getElementById("joinName").value.trim();
-      const registrationCode = document.getElementById("joinCode").value.trim();
-      const password = document.getElementById("joinPw").value;
-      const passwordConfirm = document.getElementById("joinPw2").value;
-      const button = document.getElementById("joinButton");
+    adminToken = result.access_token;
 
-      if (!businessName || !registrationCode || !password || !passwordConfirm) {
-        showMessage("모든 항목을 입력해 주세요.");
-        return;
-      }
-
-      if (password.length < 10) {
-        showMessage("비밀번호는 10자 이상 입력해 주세요.");
-        return;
-      }
-
-      if (password !== passwordConfirm) {
-        showMessage("비밀번호가 서로 일치하지 않습니다.");
-        return;
-      }
-
-      button.disabled = true;
-      button.textContent = "신청 처리 중...";
-      showMessage("");
-
-      try {
-        const result = await sendRequest({
-          action: "signup",
-          businessName,
-          password,
-          registrationCode
-        });
-
-        showMessage(result.message || "이용 신청이 접수되었습니다. 소방서 승인 후 로그인할 수 있습니다.");
-        document.getElementById("joinPw").value = "";
-        document.getElementById("joinPw2").value = "";
-        document.getElementById("joinCode").value = "";
-      } catch (error) {
-        showMessage(error.message);
-      } finally {
-        button.disabled = false;
-        button.textContent = "이용 신청";
-      }
-    }
-
-    async function login() {
-      const businessName = document.getElementById("loginId").value.trim();
-      const password = document.getElementById("loginPw").value;
-      const button = document.getElementById("loginButton");
-
-      if (!businessName || !password) {
-        showMessage("사업장명과 비밀번호를 입력해 주세요.");
-        return;
-      }
-
-      button.disabled = true;
-      button.textContent = "로그인 중...";
-      showMessage("");
-
-      try {
-        const result = await sendRequest({
-          action: "login",
-          businessName,
-          password
-        });
-
-        if (result.status !== "approved" || !result.session) {
-          showMessage(result.message || "아직 소방서 승인 전입니다.");
-          return;
+    /* 관리자 전용 RLS가 적용된 신청 목록을 읽어 관리자 권한 확인 */
+    const check = await fetch(
+      SUPABASE_URL + "/rest/v1/business_applications?select=id&limit=1",
+      {
+        headers:{
+          "apikey":SUPABASE_PUBLISHABLE_KEY,
+          "Authorization":"Bearer " + adminToken
         }
-
-        sessionStorage.setItem("safetyitta_session", JSON.stringify(result.session));
-        sessionStorage.setItem("safetyitta_business", businessName);
-        showMessage(result.message || "로그인되었습니다.");
-      } catch (error) {
-        showMessage(error.message);
-      } finally {
-        button.disabled = false;
-        button.textContent = "로그인";
       }
+    );
+
+    if (!check.ok) {
+      adminToken = null;
+      throw new Error("관리자 권한이 확인되지 않습니다. 소방서 관리자 계정인지 확인해 주세요.");
     }
-  </script>
+
+    document.getElementById("adminLoginArea").classList.add("hidden");
+    document.getElementById("adminDashboard").classList.remove("hidden");
+    showAdminMessage("관리자 로그인에 성공했습니다.");
+    await loadApplications();
+  } catch(error) {
+    showAdminMessage(error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "관리자 로그인";
+  }
+}
+
+/* 가입 신청 목록 조회 */
+async function loadApplications() {
+  if (!adminToken) return;
+
+  const list = document.getElementById("applicationList");
+  list.textContent = "신청 목록을 불러오는 중입니다...";
+
+  try {
+    const response = await fetch(
+      SUPABASE_URL + "/rest/v1/business_applications?select=id,business_name,status,created_at,rejection_reason,login_email&order=created_at.desc",
+      {
+        headers:{
+          "apikey":SUPABASE_PUBLISHABLE_KEY,
+          "Authorization":"Bearer " + adminToken
+        }
+      }
+    );
+
+    const rows = await response.json().catch(() => []);
+    if (!response.ok) throw new Error("신청 목록을 불러오지 못했습니다.");
+
+    if (!rows.length) {
+      list.textContent = "등록된 가입 신청이 없습니다.";
+      return;
+    }
+
+    list.innerHTML = "";
+    rows.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "application";
+
+      const title = document.createElement("h3");
+      title.textContent = item.business_name || "사업장명 미등록";
+
+      const status = document.createElement("span");
+      status.className = "status " + item.status;
+      status.textContent =
+        item.status === "pending" ? "승인 대기" :
+        item.status === "approved" ? "승인 완료" : "반려";
+
+      const date = document.createElement("p");
+      date.textContent = "신청일: " + new Date(item.created_at).toLocaleString("ko-KR");
+
+      card.append(title,status,date);
+
+      if (item.login_email) {
+        const email = document.createElement("p");
+        email.textContent = "계정: " + item.login_email;
+        card.append(email);
+      }
+
+      if (item.rejection_reason) {
+        const reason = document.createElement("p");
+        reason.textContent = "반려 사유: " + item.rejection_reason;
+        card.append(reason);
+      }
+
+      if (item.status === "pending") {
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const approve = document.createElement("button");
+        approve.className = "approve";
+        approve.textContent = "승인";
+        approve.onclick = () => reviewApplication(item.id,"approved");
+
+        const reject = document.createElement("button");
+        reject.className = "reject";
+        reject.textContent = "반려";
+        reject.onclick = () => reviewApplication(item.id,"rejected");
+
+        actions.append(approve,reject);
+        card.append(actions);
+      }
+
+      list.append(card);
+    });
+  } catch(error) {
+    list.textContent = error.message;
+  }
+}
+
+/* 승인 또는 반려 처리 */
+async function reviewApplication(id,status) {
+  let rejectionReason = null;
+
+  if (status === "rejected") {
+    rejectionReason = prompt("반려 사유를 입력해 주세요.");
+    if (rejectionReason === null) return;
+    if (!rejectionReason.trim()) {
+      alert("반려 사유를 입력해 주세요.");
+      return;
+    }
+  } else {
+    if (!confirm("이 사업장의 가입 신청을 승인하시겠습니까?")) return;
+  }
+
+  try {
+    const response = await fetch(
+      SUPABASE_URL + "/rest/v1/business_applications?id=eq." + encodeURIComponent(id) + "&status=eq.pending",
+      {
+        method:"PATCH",
+        headers:{
+          "apikey":SUPABASE_PUBLISHABLE_KEY,
+          "Authorization":"Bearer " + adminToken,
+          "Content-Type":"application/json",
+          "Prefer":"return=representation"
+        },
+        body:JSON.stringify({
+          status:status,
+          reviewed_at:new Date().toISOString(),
+          rejection_reason:rejectionReason
+        })
+      }
+    );
+
+    const result = await response.json().catch(() => []);
+    if (!response.ok) {
+      throw new Error("처리하지 못했습니다. 관리자 권한과 데이터베이스 정책을 확인해 주세요.");
+    }
+    if (!result.length) {
+      throw new Error("처리된 신청이 없습니다. 목록을 새로고침해 주세요.");
+    }
+
+    alert(status === "approved" ? "승인 처리되었습니다." : "반려 처리되었습니다.");
+    await loadApplications();
+  } catch(error) {
+    alert(error.message);
+  }
+}
+
+function adminLogout() {
+  adminToken = null;
+  document.getElementById("adminLoginArea").classList.remove("hidden");
+  document.getElementById("adminDashboard").classList.add("hidden");
+  document.getElementById("adminEmail").value = "";
+  document.getElementById("adminPassword").value = "";
+  document.getElementById("applicationList").innerHTML = "";
+  showAdminMessage("로그아웃되었습니다.");
+}
+</script>
 </body>
 </html>
