@@ -236,7 +236,6 @@ async function login() {
     sessionStorage.setItem("safetyitta_session",JSON.stringify(result.session));
     sessionStorage.setItem("safetyitta_business",businessName);
     showMessage(result.message||"로그인되었습니다.");
-    show("dashboard");
   } catch(error) {
     showMessage(error.message);
   } finally {
