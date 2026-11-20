@@ -233,6 +233,47 @@ footer{text-align:center;color:#8793a3;font-size:12px;padding:25px 10px}
   <div class="dashboard-footer">SAFE ON · 안전을 켜다</div>
 </div>
 
+  
+<!-- 온도변화 스티커 관리 화면 -->
+<div id="temperaturePage" class="hidden">
+  <div class="dashboard-top">
+    <h2>🌡️ 온도변화 관리</h2>
+    <p>스티커 설치 및 관찰 기록</p>
+  </div>
+
+  <div style="padding:20px;">
+    <h3>스티커 설치 기록</h3>
+
+    <label>설치 장소</label>
+    <input type="text" id="tempLocation" placeholder="예: 사무실 멀티탭">
+
+    <label>설치일</label>
+    <input type="date" id="tempDate">
+
+    <label>스티커 상태</label>
+    <select id="tempStatus">
+      <option value="">상태 선택</option>
+      <option value="정상">정상</option>
+      <option value="색상 변화">색상 변화</option>
+      <option value="이상 발견">이상 발견</option>
+    </select>
+
+    <label>관찰 내용</label>
+    <textarea id="tempMemo" placeholder="온도변화 및 발견 사항을 입력해 주세요."></textarea>
+
+    <label>설치 및 관찰 사진</label>
+    <input type="file" id="tempPhoto" accept="image/*" capture="environment">
+
+    <button type="button" onclick="saveTemperature()">
+      기록 등록
+    </button>
+
+    <button type="button" onclick="backToDashboard()">
+      대시보드로 돌아가기
+    </button>
+  </div>
+</div>
+
 <footer>세이프온(SAFE ON) · 사업장 화재예방 통합관리 플랫폼</footer>
 
 <script>
@@ -276,8 +317,17 @@ function businessLogout() {
 }
 
 /* 메인 화면 메뉴 */
+
 function openTemperature() {
-  alert("온도변화 스티커 관리 메뉴를 준비하고 있습니다.");
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("mainPanel").classList.add("hidden");
+  document.getElementById("businessDashboard").classList.add("hidden");
+  document.getElementById("temperaturePage").classList.remove("hidden");
+}
+
+function backToDashboard() {
+  document.getElementById("temperaturePage").classList.add("hidden");
+  document.getElementById("businessDashboard").classList.remove("hidden");
 }
 
 function openRisk() {
