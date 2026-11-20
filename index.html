@@ -40,6 +40,79 @@ input{width:100%;padding:14px;border:1px solid #d7dfe8;border-radius:9px;font-si
 .status.approved{background:#e3f5ee;color:#16734e}
 .status.rejected{background:#fbe8e8;color:#a33c3c}
 .admin-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+/* SAFE ON 사업장 메인 화면 */
+.business-dashboard{
+  display:none;
+  max-width:520px;
+  margin:25px auto;
+  padding:0 18px;
+}
+.dashboard-top{
+  background:#12345a;
+  color:white;
+  border-radius:18px;
+  padding:24px;
+  margin-bottom:18px;
+}
+.dashboard-top h2{
+  margin:0 0 8px;
+  font-size:24px;
+}
+.dashboard-top p{
+  margin:0;
+  font-size:14px;
+  color:#d5e5f5;
+  line-height:1.6;
+}
+.dashboard-welcome{
+  margin:20px 0;
+  font-size:20px;
+  font-weight:800;
+  color:#17243a;
+}
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.dashboard-card{
+  background:white;
+  border-radius:16px;
+  padding:20px 16px;
+  min-height:145px;
+  box-shadow:0 5px 20px rgba(20,45,75,.07);
+  border:1px solid #e8edf3;
+}
+.dashboard-card h3{
+  font-size:16px;
+  margin:12px 0 8px;
+}
+.dashboard-card p{
+  margin:0;
+  font-size:12px;
+  color:#68788d;
+  line-height:1.6;
+}
+.dashboard-icon{
+  font-size:28px;
+}
+.dashboard-logout{
+  width:100%;
+  padding:14px;
+  margin-top:20px;
+  border:0;
+  border-radius:10px;
+  background:#e9eef4;
+  color:#34445a;
+  font-weight:700;
+  cursor:pointer;
+}
+.dashboard-footer{
+  text-align:center;
+  color:#8793a3;
+  font-size:12px;
+  padding:20px 0;
+}
 footer{text-align:center;color:#8793a3;font-size:12px;padding:25px 10px}
 </style>
 </head>
@@ -135,7 +208,43 @@ let adminToken = null;
 let recoveryToken = null;
 
 function showPage(page) {
-  ["login","join","admin"].forEach(name => {
+ function businessLogout(){
+  function showBusinessDashboard(){
+  const name=sessionStorage.getItem("safetyitta_business")||"사업장";
+  document.getElementById("dashboardBusinessName").textContent=name+" 안전관리 대시보드";
+  showPage("businessDashboard");
+}
+  sessionStorage.removeItem("safetyitta_session");
+  sessionStorage.removeItem("safetyitta_business");
+  showPage("login");
+}
+
+function openTemperature(){
+  alert("온도변화 스티커 관리 메뉴를 준비하고 있습니다.");
+}
+
+function openRisk(){
+  alert("위험요인 기록 메뉴를 준비하고 있습니다.");
+}
+
+function openAction(){
+  alert("안전조치 이력 메뉴를 준비하고 있습니다.");
+}
+
+function openBusinessInfo(){
+  const name=sessionStorage.getItem("safetyitta_business")||"사업장";
+  alert("현재 로그인 사업장: "+name);
+}
+  ["login","join","admin","businessDashboard"].forEach(name => {
+  const element = document.getElementById(name+"Page") || document.getElementById(name);
+  if(element){
+    element.classList.toggle("hidden",name!==page);
+  }
+  const tab = document.getElementById(name+"Tab");
+  if(tab){
+    tab.classList.toggle("active",name===page);
+  }
+});
     document.getElementById(name+"Page").classList.toggle("hidden",name!==page);
     document.getElementById(name+"Tab").classList.toggle("active",name===page);
   });
@@ -236,6 +345,7 @@ async function login() {
     sessionStorage.setItem("safetyitta_session",JSON.stringify(result.session));
     sessionStorage.setItem("safetyitta_business",businessName);
     showMessage(result.message||"로그인되었습니다.");
+    showBusinessDashboard();
   } catch(error) {
     showMessage(error.message);
   } finally {
@@ -578,5 +688,55 @@ async function changePassword() {
 
 checkRecoveryLink();
 </script>
+<div id="businessDashboard" class="business-dashboard">
+
+  <div class="dashboard-top">
+    <h2>🔥 SAFE ON</h2>
+    <p>사업장 화재예방 통합관리 플랫폼</p>
+    <p>안전을 켜다</p>
+  </div>
+
+  <div class="dashboard-welcome">
+    오늘도 안전 ON
+    <p id="dashboardBusinessName" style="font-size:14px;font-weight:500;"></p>
+  </div>
+
+  <div class="dashboard-grid">
+
+    <div class="dashboard-card" onclick="openTemperature()">
+      <div class="dashboard-icon">🌡️</div>
+      <h3>온도변화 관리</h3>
+      <p>스티커 설치 및 관찰 기록</p>
+    </div>
+
+    <div class="dashboard-card" onclick="openRisk()">
+      <div class="dashboard-icon">⚠️</div>
+      <h3>위험요인 기록</h3>
+      <p>화재 위험요인 발견 및 기록</p>
+    </div>
+
+    <div class="dashboard-card" onclick="openAction()">
+      <div class="dashboard-icon">🛡️</div>
+      <h3>안전조치 이력</h3>
+      <p>조치내용 및 사진 등록</p>
+    </div>
+
+    <div class="dashboard-card" onclick="openBusinessInfo()">
+      <div class="dashboard-icon">🏭</div>
+      <h3>우리 사업장</h3>
+      <p>사업장 정보 확인</p>
+    </div>
+
+  </div>
+
+  <button class="dashboard-logout" onclick="businessLogout()">
+    로그아웃
+  </button>
+
+  <div class="dashboard-footer">
+    SAFE ON · 안전을 켜다
+  </div>
+
+</div>
 </body>
 </html>
